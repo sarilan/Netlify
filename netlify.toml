@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Required for SPA — though FORGE uses state-based routing,
+# this ensures any direct URL load serves index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

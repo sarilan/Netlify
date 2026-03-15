@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { PHASES, OCEAN_DIMENSIONS } from '../phases';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 function buildSystemPrompt(data) {
   const answers = data.answers || {};
@@ -63,7 +64,9 @@ Je suis là pour t'aider à clarifier ta vocation — pas pour te rassurer, mais
 
 Réponds à quelques questions dans les phases d'abord, et on pourra travailler ensemble sur ce qui émerge. Ou si tu veux démarrer maintenant, dis-moi ce qui t'a amené ici.`;
 
-export default function Coach({ storageData }) {
+export default function Coach({ storageData, isMobile: isMobileProp }) {
+  const isMobileHook = useIsMobile();
+  const isMobile = isMobileProp ?? isMobileHook;
   const [messages, setMessages] = useState([
     { role: 'assistant', content: ARIA_INTRO }
   ]);
@@ -138,10 +141,10 @@ export default function Coach({ storageData }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
       {/* Header */}
       <div style={{
-        padding: '20px 24px',
+        padding: isMobile ? '14px 16px' : '20px 24px',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
         flexShrink: 0,
       }}>
@@ -194,10 +197,11 @@ export default function Coach({ storageData }) {
       <div style={{
         flex: 1,
         overflowY: 'auto',
-        padding: '20px 24px',
+        padding: isMobile ? '16px' : '20px 24px',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
+        WebkitOverflowScrolling: 'touch',
       }}>
         {messages.map((msg, i) => (
           <div
@@ -257,7 +261,7 @@ export default function Coach({ storageData }) {
 
       {/* Input */}
       <div style={{
-        padding: '16px 24px',
+        padding: isMobile ? '12px 16px' : '16px 24px',
         borderTop: '1px solid rgba(255,255,255,0.06)',
         flexShrink: 0,
       }}>
@@ -271,7 +275,7 @@ export default function Coach({ storageData }) {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKey}
-            placeholder="Parle à ARIA... (Entrée pour envoyer)"
+            placeholder="Parle à ARIA..."
             rows={1}
             style={{
               flex: 1,
@@ -280,7 +284,7 @@ export default function Coach({ storageData }) {
               borderRadius: '12px',
               padding: '12px 16px',
               color: '#E8E6F0',
-              fontSize: '14px',
+              fontSize: '16px', /* ≥16px prevents iOS zoom on focus */
               lineHeight: 1.5,
               resize: 'none',
               outline: 'none',

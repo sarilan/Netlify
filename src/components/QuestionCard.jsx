@@ -64,7 +64,7 @@ export default function QuestionCard({ question, phaseColor, value, onChange }) 
             borderRadius: '8px',
             padding: '14px',
             color: '#E8E6F0',
-            fontSize: '14px',
+            fontSize: '16px', /* ≥16px prevents iOS Safari zoom on focus */
             lineHeight: 1.6,
             resize: 'vertical',
             outline: 'none',
